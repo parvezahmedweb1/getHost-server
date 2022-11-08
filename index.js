@@ -27,6 +27,7 @@ const dbConnected = async () => {
 dbConnected();
 const Services = client.db("GetHost").collection("Services");
 const Users = client.db("GetHost").collection("Users");
+
 // ? get the services
 app.get("/services", async (req, res) => {
   try {
@@ -36,6 +37,22 @@ app.get("/services", async (req, res) => {
       services: result,
     });
   } catch (err) {
+    res.send({
+      success: false,
+      error: err.message,
+    });
+  }
+});
+// ? get the services limit
+app.get("/limit", async (req, res) => {
+  try {
+    const result = await Services.find({}).limit(3).toArray();
+    res.send({
+      success: true,
+      services: result,
+    });
+  } catch (err) {
+    console.log(err.message);
     res.send({
       success: false,
       error: err.message,
