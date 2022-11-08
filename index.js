@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const port = process.env.PORT || 5000;
 require("colors");
@@ -53,6 +53,22 @@ app.get("/limit", async (req, res) => {
     });
   } catch (err) {
     console.log(err.message);
+    res.send({
+      success: false,
+      error: err.message,
+    });
+  }
+});
+// ? get the selected service
+app.get("/services/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await Services.findOne({ _id: ObjectId(id) });
+    res.send({
+      success: true,
+      services: result,
+    });
+  } catch (err) {
     res.send({
       success: false,
       error: err.message,
