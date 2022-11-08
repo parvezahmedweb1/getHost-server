@@ -25,6 +25,23 @@ const dbConnected = async () => {
   }
 };
 dbConnected();
+const Services = client.db("GetHost").collection("Services");
+const Users = client.db("GetHost").collection("Users");
+// ? get the services
+app.get("/services", async (req, res) => {
+  try {
+    const result = await Services.find({}).toArray();
+    res.send({
+      success: true,
+      services: result,
+    });
+  } catch (err) {
+    res.send({
+      success: false,
+      error: err.message,
+    });
+  }
+});
 // ------------------------------------
 app.get("/", (req, res) => {
   res.send("GetHost Server is Running...");
