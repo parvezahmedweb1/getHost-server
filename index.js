@@ -10,11 +10,16 @@ app.use(cors());
 app.use(express.json());
 // ? mongodb
 const uri = `mongodb+srv://${process.env.DB_USERS}:${process.env.DB_PASSWORD}@cluster0.mc1suux.mongodb.net/?retryWrites=true&w=majority`;
-const client = new MongoClient(uri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  serverApi: ServerApiVersion.v1,
-});
+const client = new MongoClient(
+  uri,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverApi: ServerApiVersion.v1,
+  },
+  { connectTimeoutMS: 30000 },
+  { keepAlive: 1 }
+);
 // ? dbConnected
 const dbConnected = async () => {
   try {
@@ -31,7 +36,7 @@ const Users = client.db("GetHost").collection("Users");
 // ? get the services
 app.get("/services", async (req, res) => {
   try {
-    const result = await Services.find({}).toArray();
+    const result = await Services.find({}).sort({ _id: -1 }).toArray();
     res.send({
       success: true,
       services: result,
@@ -46,10 +51,28 @@ app.get("/services", async (req, res) => {
 // ? get the services limit
 app.get("/limit", async (req, res) => {
   try {
-    const result = await Services.find({}).limit(3).toArray();
+    const result = await Services.find().sort({ _id: -1 }).limit(3).toArray();
+    // result.reverse();
     res.send({
       success: true,
       services: result,
+    });
+  } catch (err) {
+    console.log(err.message);
+    res.send({
+      success: false,
+      error: err.message,
+    });
+  }
+});
+// ? add new service
+app.post("/services", async (req, res) => {
+  try {
+    const result = await Services.insertOne(req.body);
+    console.log(result);
+    res.send({
+      success: true,
+      insertedId: result.insertedId,
     });
   } catch (err) {
     console.log(err.message);
@@ -66,7 +89,7 @@ app.get("/services/:id", async (req, res) => {
     const result = await Services.findOne({ _id: ObjectId(id) });
     res.send({
       success: true,
-      services: result,
+      service: result,
     });
   } catch (err) {
     res.send({
