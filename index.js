@@ -106,7 +106,7 @@ app.get("/reviews", async (req, res) => {
         useEmail: req.query.email,
       };
     }
-    const reviews = await Reviews.find(query).toArray();
+    const reviews = await Reviews.find(query).sort({ _id: -1 }).toArray();
     res.send(reviews);
   } catch (err) {
     res.send({
@@ -118,7 +118,7 @@ app.get("/reviews", async (req, res) => {
 // ? all reviews
 app.get("/reviews", async (req, res) => {
   try {
-    const reviews = await Reviews.find({}).toArray();
+    const reviews = await Reviews.find({}).sort({ _id: -1 }).toArray();
     res.send(reviews);
   } catch (err) {
     res.send({
