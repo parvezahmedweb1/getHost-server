@@ -4,13 +4,13 @@ This is a Website for getHost build with React JS.
 
 ## Live Site
 
-Firebase Link: [iAcademy](https://gethost-83085.web.app/)
+Firebase Link: [getHost](https://gethost-83085.web.app/)
 
 Code : [github](https://github.com/Porgramming-Hero-web-course/b6a11-service-review-client-side-parvezahmedweb1)
 
 ## Server Site
 
-Versel Link: [iAcademy](https://gethost-server.vercel.app/)
+Versel Link: [getHost](https://gethost-server.vercel.app/)
 
 Code Link: [github](https://github.com/Porgramming-Hero-web-course/b6a11-service-review-server-side-parvezahmedweb1)
 
