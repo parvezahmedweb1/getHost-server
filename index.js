@@ -31,7 +31,7 @@ const dbConnected = async () => {
 };
 dbConnected();
 const Services = client.db("GetHost").collection("Services");
-const Users = client.db("GetHost").collection("Users");
+const Reviews = client.db("GetHost").collection("Users");
 
 // ? get the services
 app.get("/services", async (req, res) => {
@@ -52,7 +52,6 @@ app.get("/services", async (req, res) => {
 app.get("/limit", async (req, res) => {
   try {
     const result = await Services.find().sort({ _id: -1 }).limit(3).toArray();
-    // result.reverse();
     res.send({
       success: true,
       services: result,
@@ -76,6 +75,40 @@ app.post("/services", async (req, res) => {
     });
   } catch (err) {
     console.log(err.message);
+    res.send({
+      success: false,
+      error: err.message,
+    });
+  }
+});
+// ? review
+app.post("/reviews", async (req, res) => {
+  try {
+    const result = await Reviews.insertOne(req.body);
+    res.send({
+      success: true,
+      acknowledged: result.acknowledged,
+    });
+  } catch (err) {
+    console.log(err.message);
+    res.send({
+      success: false,
+      error: err.message,
+    });
+  }
+});
+// ? get reviews
+app.get("/reviews", async (req, res) => {
+  try {
+    let query = {};
+    if (req.query.email) {
+      query = {
+        useEmail: req.query.email,
+      };
+    }
+    const reviews = await Reviews.find(query).toArray();
+    res.send(reviews);
+  } catch (err) {
     res.send({
       success: false,
       error: err.message,
