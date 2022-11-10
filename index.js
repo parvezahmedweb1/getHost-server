@@ -31,7 +31,7 @@ const dbConnected = async () => {
 };
 dbConnected();
 const Services = client.db("GetHost").collection("Services");
-const Reviews = client.db("GetHost").collection("Users");
+const Reviews = client.db("GetHost").collection("Reviews");
 
 // ? get the services
 app.get("/services", async (req, res) => {
@@ -115,6 +115,28 @@ app.get("/reviews", async (req, res) => {
     });
   }
 });
+// ? all reviews
+app.get("/reviews", async (req, res) => {
+  try {
+    const reviews = await Reviews.find({}).toArray();
+    res.send(reviews);
+  } catch (err) {
+    res.send({
+      success: false,
+      error: err.message,
+    });
+  }
+});
+// ? delete review
+app.delete("/reviews/:id", async (req, res) => {
+  const id = req.params.id;
+  console.log(id);
+  const query = { _id: ObjectId(id) };
+  const result = await Reviews.deleteOne(query);
+  console.log(result);
+  res.send(result);
+});
+
 // ? get the selected service
 app.get("/services/:id", async (req, res) => {
   try {
